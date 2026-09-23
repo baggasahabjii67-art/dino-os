@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Dino OS — a fast, playful desktop experience for low-end PCs.">
+  <title>Dino OS</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="boot" id="boot" aria-label="Starting Dino OS"><div class="boot-logo">🦖</div><strong>DINO CORE</strong><span>Starting a lightweight desktop…</span><div class="boot-bar"><i></i></div></div>
+  <main class="desktop" id="desktop">
+    <div class="wallpaper-glow glow-a"></div><div class="wallpaper-glow glow-b"></div>
+    <header class="topbar"><button class="brand" data-open="core"><span>🦕</span> Dino OS</button><div class="top-status"><span id="clock">04:18</span><span class="status-pill" id="network">◉ Online</span><span>🔋 <b id="battery">87</b>%</span></div></header>
+    <section class="workspace" id="workspace"><div class="empty-hint"><div class="dino-mark">🦖</div><h1>DINO CORE</h1><p>Click the Core to explore your optimized desktop</p><button class="core-button" data-open="core" aria-label="Open Dino Core">🦖</button></div></section>
+    <nav class="dock" aria-label="Dino OS applications">
+      <button class="dock-item" data-open="files" title="Files">📁<small>Files</small></button><button class="dock-item" data-open="gallery" title="Gallery">🎨<small>Gallery</small></button><button class="dock-item" data-open="games" title="Games">🎮<small>Games</small></button><button class="dock-item" data-open="notes" title="Notes">📝<small>Notes</small></button><button class="dock-item dino-dock" data-open="core" title="Dino Core">🦖<small>Core</small></button><button class="dock-item" data-open="settings" title="Settings">⚙️<small>Settings</small></button><button class="dock-item" data-open="search" title="Search">🔍<small>Search</small></button>
+    </nav>
+  </main>
+  <div class="toast-stack" id="toasts" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
