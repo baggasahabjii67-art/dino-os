@@ -4,12 +4,17 @@ const seed=[
  {id:'chainsaw-man',title:'Chainsaw Man',author:'Tatsuki Fujimoto',status:'Reading',chapters:172,source:'AniList',sourceId:'anilist',cover:'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&q=85'},
  {id:'frieren',title:'Frieren: Beyond Journey’s End',author:'Kanehito Yamada',status:'Completed',chapters:140,source:'AniList',sourceId:'anilist',cover:'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=600&q=85'}
 ];
+const builtInSources=[
+ {id:'mangadex',name:'MangaDex',language:'all',version:'Built-in',repo:'Keiyoushi extensions',installed:false,status:'Available'},
+ {id:'mangafreak',name:'MangaFreak',language:'en',version:'Built-in',repo:'Keiyoushi extensions',installed:false,status:'Available'},
+ {id:'anilist',name:'AniList',language:'all',version:'Built-in',repo:'Keiyoushi extensions',installed:false,status:'Available'}
+];
 const defaults={direction:'Vertical',fit:'Width',theme:'Dark',preload:true};
 export const store={
  get library(){return JSON.parse(localStorage.getItem('manga-library')||'null')||seed},set library(v){localStorage.setItem('manga-library',JSON.stringify(v))},
  get history(){return JSON.parse(localStorage.getItem('manga-history')||'[]')},set history(v){localStorage.setItem('manga-history',JSON.stringify(v))},
  get settings(){return {...defaults,...JSON.parse(localStorage.getItem('reader-settings')||'{}')}},set settings(v){localStorage.setItem('reader-settings',JSON.stringify(v))},
- get sources(){return JSON.parse(localStorage.getItem('manga-sources')||'null')||[{id:'mangadex',name:'MangaDex',repo:'Built-in catalog',status:'Installed',installed:true},{id:'anilist',name:'AniList',repo:'Built-in catalog',status:'Installed',installed:true}]},set sources(v){localStorage.setItem('manga-sources',JSON.stringify(v))}
+ get sources(){const saved=JSON.parse(localStorage.getItem('manga-sources')||'null');if(!saved)return builtInSources;const map=new Map(saved.map(s=>[s.id,s]));builtInSources.forEach(s=>{if(!map.has(s.id))map.set(s.id,s)});return [...map.values()]},set sources(v){localStorage.setItem('manga-sources',JSON.stringify(v))}
 };
 export function cover(m){return m.cover||seed[0].cover}
 export function findManga(id){return [...store.library,...seed].find(m=>m.id===id)||store.library[0]}
