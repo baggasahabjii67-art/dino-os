@@ -1,34 +1,14 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
-
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 1400,
-    height: 900,
-    minWidth: 1100,
-    minHeight: 700,
-    frame: true,
-    backgroundColor: '#07111f',
-    title: 'Dino OS',
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false
-    }
-  });
-
-  win.loadFile(path.join(__dirname, 'index.html'));
-  win.setMenuBarVisibility(false);
-}
-
-app.whenReady().then(() => {
-  createWindow();
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
-});
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
+import {store,cover,toast,openReader} from './app.js';
+const app=document.querySelector('#app');let current='home', query='';
+const icon={home:'⌂',library:'▣',extensions:'⚙',history:'◷',settings:'☷'};
+function nav(){return Object.entries(icon).map(([id,i])=>`<button class="nav ${current===id?'active':''}" data-nav="${id}"><span>${i}</span> <label>${id[0].toUpperCase()+id.slice(1)}</label></button>`).join('')}
+function card(m){return `<article class="card"><div class="cover"><img src="${cover(m)}" alt="${m.title}"><span class="badge">${m.status||'New'}</span></div><h3>${m.title}</h3><p>${m.author} · ${m.chapters||0} ch.</p><button class="btn" style="width:100%;margin-top:10px" data-read="${m.id}">Read</button></article>`}
+function home(){let list=store.library.filter(m=>!query||m.title.toLowerCase().includes(query.toLowerCase()));return `<div class="view-head"><div><h1>Welcome back</h1><p class="sub">Pick up where you left off</p></div><button class="btn primary" data-nav="extensions">Browse extensions</button></div><div class="panel"><h2>Continue reading</h2><div class="grid">${list.slice(0,4).map(card).join('')}</div></div><div class="view-head"><div><h2>Recently updated</h2><p class="sub">Synced from your enabled sources</p></div></div><div class="grid">${seedMore().map(card).join('')}</div>`}
+function seedMore(){return [...store.library,{id:'blue-lock',title:'Blue Lock',author:'Muneyuki Kaneshiro',status:'New',chapters:288,cover:'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80'}].filter((m,i,a)=>a.findIndex(x=>x.id===m.id)===i)}
+function library(){return `<div class="view-head"><div><h1>My library</h1><p class="sub">${store.library.length} titles · stored locally</p></div><button class="btn" data-action="clear">Clear library</button></div><div class="grid">${store.library.map(card).join('')}</div>`}
+function extensions(){return `<div class="view-head"><div><h1>Extensions</h1><p class="sub">Install source adapters to expand your catalog</p></div><button class="btn primary" data-action="install">Install from manifest</button></div><div class="panel"><h2>Installed extensions</h2>${store.extensions.map(e=>`<div class="row"><div class="extension"><div class="ext-icon">${e.name[0]}</div><div><b>${e.name}</b><div class="muted">${e.description||'Community source adapter'} · ${e.lang||'Multi-language'}</div></div></div><div><span class="status">● ${e.enabled?'Enabled':'Disabled'}</span><button class="btn" data-toggle="${e.id}" style="margin-left:12px">${e.enabled?'Disable':'Enable'}</button></div></div>`).join('')}</div><div class="panel"><h2>Extension API</h2><p class="muted">Mihon-compatible adapters can be represented by a JSON manifest with <code>id</code>, <code>name</code>, <code>version</code>, <code>lang</code>, and source endpoints. Add only sources you have permission to access; browser CORS and site terms still apply.</p><button class="btn" data-action="docs">View manifest format</button></div>`}
+function settings(){return `<div class="view-head"><div><h1>Settings</h1><p class="sub">Reader preferences and data</p></div></div><div class="panel"><h2>Reader</h2><div class="row"><span>Reading direction</span><select class="input" style="width:180px;margin:0"><option>Vertical</option><option>Left to right</option><option>Right to left</option></select></div><div class="row"><span>Preload next chapter</span><input type="checkbox" checked></div><div class="row"><span>Theme</span><span class="muted">Dark · OLED friendly</span></div></div><div class="panel"><h2>Local data</h2><p class="muted">Your library, history, and extension configuration are saved in this browser.</p><button class="btn danger" data-action="reset">Reset all data</button></div>`}
+function view(){let body=current==='home'?home():current==='library'?library():current==='extensions'?extensions():current==='settings'?settings():`<div class="view-head"><h1>History</h1></div><div class="empty">Reading history will appear here.</div>`;app.innerHTML=`<div class="shell"><header class="topbar"><div class="brand">mihon<span>·web</span></div><input class="search" value="${query}" placeholder="Search manga, authors, genres…" aria-label="Search"><div class="profile">Local profile</div></header><div class="layout"><aside class="sidebar">${nav()}</aside><main class="content">${body}</main></div></div>`;bind()}
+function bind(){document.querySelectorAll('[data-nav]').forEach(x=>x.onclick=()=>{current=x.dataset.nav;view()});document.querySelector('.search').oninput=e=>{query=e.target.value;view()};document.querySelectorAll('[data-read]').forEach(x=>x.onclick=()=>openReader(seedMore().find(m=>m.id===x.dataset.read)||store.library[0]));document.querySelectorAll('[data-toggle]').forEach(x=>x.onclick=()=>{let e=store.extensions.map(a=>a.id===x.dataset.toggle?{...a,enabled:!a.enabled}:a);store.extensions=e;view()});document.querySelector('[data-action="clear"]')?.addEventListener('click',()=>{store.library=[];view()});document.querySelector('[data-action="reset"]')?.addEventListener('click',()=>{localStorage.clear();location.reload()});document.querySelector('[data-action="docs"]')?.addEventListener('click',()=>toast('Manifest: { id, name, version, lang, baseUrl, capabilities }'));document.querySelector('[data-action="install"]')?.addEventListener('click',()=>install())}
+function install(){const raw=prompt('Paste an extension manifest JSON');if(!raw)return;try{const e=JSON.parse(raw);if(!e.id||!e.name)throw Error();store.extensions=[...store.extensions.filter(x=>x.id!==e.id),{...e,enabled:true}];toast(`${e.name} installed`);view()}catch{toast('Invalid manifest: id and name are required')}}
+view();

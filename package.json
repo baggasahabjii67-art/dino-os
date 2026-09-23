@@ -1,32 +1,8 @@
 {
-  "name": "dino-os",
+  "name": "mihon-web-reader",
   "version": "1.0.0",
-  "description": "Dino OS desktop experience packaged as a desktop app",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "dist": "electron-builder --win portable"
-  },
-  "devDependencies": {
-    "electron": "^31.0.0",
-    "electron-builder": "^24.13.0"
-  },
-  "build": {
-    "appId": "com.dinoos.desktop",
-    "productName": "Dino OS",
-    "directories": {
-      "output": "dist"
-    },
-    "win": {
-      "target": [
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "artifactName": "DinoOS-${version}-portable.exe"
-    }
-  }
+  "private": true,
+  "description": "A privacy-first, browser-based manga reader with extension manifests.",
+  "scripts": {"start": "npx serve ."},
+  "license": "Apache-2.0"
 }

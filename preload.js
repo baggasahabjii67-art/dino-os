@@ -1,3 +1,2 @@
-window.addEventListener('DOMContentLoaded', () => {
-  // preload is just a safe place for future app bridge logic.
-});
+# This project is now a static web application.
+# Electron/Dino OS runtime files were intentionally retired.
