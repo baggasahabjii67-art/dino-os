@@ -73,7 +73,7 @@ function renderCard(manga) {
       </div>
       <h3>${escapeHtml(manga.title)}</h3>
       <p>${escapeHtml(manga.author)} · ${manga.chapters} chapters</p>
-      <button class="btn small">Read</button>
+      <button class="btn small" data-read="${escapeHtml(manga.id)}">Read</button>
     </article>
   `;
 }
@@ -145,6 +145,29 @@ function renderSourcesView() {
   `;
 }
 
+function openReader(manga) {
+  const modal = document.createElement('div');
+  modal.className = 'reader-modal';
+  modal.innerHTML = `
+    <div class="reader-box" role="dialog" aria-modal="true" aria-labelledby="reader-title">
+      <button class="close" type="button" aria-label="Close reader">×</button>
+      <p class="muted">${escapeHtml(manga.title)}</p>
+      <h1 id="reader-title">Chapter 1</h1>
+      <div class="reader-page">
+        <img src="${manga.cover}" alt="${escapeHtml(manga.title)} cover" />
+        <p>Chapter content is not available from this source yet.</p>
+      </div>
+    </div>
+  `;
+
+  document.body.append(modal);
+  const close = () => modal.remove();
+  modal.querySelector('.close').addEventListener('click', close);
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) close();
+  });
+}
+
 function render() {
   if (!app) return;
 
@@ -186,6 +209,13 @@ function render() {
       render();
     });
   }
+
+  document.querySelectorAll('[data-read]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const manga = mangaLibrary.find((item) => item.id === button.dataset.read);
+      if (manga) openReader(manga);
+    });
+  });
 
   document.querySelectorAll('[data-source-toggle]').forEach((button) => {
     button.addEventListener('click', () => {
