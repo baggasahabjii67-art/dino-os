@@ -10,6 +10,7 @@ aside { width: 230px; padding: 24px 14px; background: color-mix(in srgb, var(--p
 .nav { display: flex; align-items: center; gap: 12px; width: 100%; margin: 4px 0; padding: 12px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); text-align: left; cursor: pointer; }
 .nav:hover, .nav.active { background: var(--panel2); color: var(--text); }
 .nav span { width: 20px; text-align: center; }
+.sidebar-version { margin: 24px 12px 4px; color: var(--muted); font-size: 12px; }
 main { flex: 1; min-width: 0; }
 header { padding: 24px; border-bottom: 1px solid var(--line); }
 .search { width: min(520px, 100%); padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); outline: none; }
@@ -27,8 +28,8 @@ h1 { margin: 0 0 8px; font-size: 30px; }
 .badge { position: absolute; left: 8px; bottom: 8px; padding: 4px 7px; border-radius: 5px; background: rgba(16,18,22,.9); color: var(--text); font-size: 12px; }
 .btn { padding: 9px 13px; border: 0; border-radius: 7px; background: var(--brand); color: #17121f; cursor: pointer; font-weight: 700; }
 .btn.small { padding: 7px 10px; font-size: 13px; }
-.row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
-.row:last-child { border-bottom: 0; }
+.row, .detail-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.row:last-child, .detail-row:last-of-type { border-bottom: 0; }
 .empty { padding: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; color: var(--muted); }
 .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
 .setting { display: flex; flex-direction: column; gap: 8px; padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
@@ -43,11 +44,9 @@ h1 { margin: 0 0 8px; font-size: 30px; }
 .reader-fit-width img { width: 100%; }
 .reader-fit-height img { max-height: 70vh; width: auto; }
 .reader-fit-original img { width: auto; max-width: none; }
-.reader-resolution-720p img { max-width: 720px; }
-.reader-resolution-1080p img { max-width: 1080px; }
-.reader-resolution-1440p img { max-width: 1440px; }
+.reader-resolution-720p img { max-width: 720px; }.reader-resolution-1080p img { max-width: 1080px; }.reader-resolution-1440p img { max-width: 1440px; }
 .reader-horizontal .reader-page { display: flex; align-items: center; gap: 20px; text-align: left; }
-body[data-optimization="battery-saver"] img { image-rendering: optimizeSpeed; }
-body[data-optimization="quality"] img { image-rendering: high-quality; }
+body[data-optimization="battery-saver"] img { image-rendering: optimizeSpeed; } body[data-optimization="quality"] img { image-rendering: high-quality; }
 body[data-animations="disabled"] *, body[data-animations="disabled"] *::before, body[data-animations="disabled"] *::after { transition: none !important; animation: none !important; }
-@media (max-width: 700px) { .shell { display: block; } aside { width: 100%; border-right: 0; border-bottom: 1px solid var(--line); display: flex; gap: 8px; overflow-x: auto; padding: 14px 12px; } .brand { padding: 0 8px 0 0; font-size: 18px; } .nav { width: auto; padding: 10px 12px; white-space: nowrap; } .nav label { display: block; } section { padding: 20px; } .settings-actions { align-items: flex-start; flex-direction: column; } .reader-horizontal .reader-page { display: block; text-align: center; } }
+body[data-incognito="enabled"] .brand::after { content: ' ◌'; color: var(--good); font-size: 14px; }
+@media (max-width: 700px) { .shell { display: block; } aside { width: 100%; border-right: 0; border-bottom: 1px solid var(--line); display: flex; gap: 8px; overflow-x: auto; padding: 14px 12px; } .brand { padding: 0 8px 0 0; font-size: 18px; } .nav { width: auto; padding: 10px 12px; white-space: nowrap; } .nav label { display: block; } .sidebar-version { margin: 4px 0; white-space: nowrap; } section { padding: 20px; } .settings-actions { align-items: flex-start; flex-direction: column; } .reader-horizontal .reader-page { display: block; text-align: center; } .detail-row { align-items: flex-start; flex-direction: column; gap: 6px; } }
